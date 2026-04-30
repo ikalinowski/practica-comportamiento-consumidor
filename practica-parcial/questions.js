@@ -143,7 +143,7 @@ const PRACTICE_EXAMS = [
             imageSrc: "assets/checkout-freshrun.png",
             imageCaption: "Pantalla de checkout de FreshRun — analiza los problemas de diseño conductual.",
             situation: `<strong>Pregunta 3 (4 pts)</strong><br>
-              Observa la pantalla de checkout de FreshRun mostrada arriba. Un equipo de UX detectó 
+              Observa la pantalla de checkout de FreshRun mostrada abajo. Un equipo de UX detectó 
               que el 48% de los usuarios abandona el carrito en este paso.`,
             parts: [
               {
