@@ -13,7 +13,7 @@ const TRACKER_URL = 'TU_URL_AQUI'; // ← Reemplazar con la URL del Apps Script 
 let examStartTime = null;
 
 function trackEvent(data) {
-  if (!TRACKER_URL || TRACKER_URL === 'TU_URL_AQUI') return;
+  if (!TRACKER_URL || TRACKER_URL === 'https://script.google.com/macros/s/AKfycbx5XBbTjqlOcaftUncXdeeFrrGnNFyua9pGXf58nsHbsN9kR9Hi4D4FLTcd29Ug98Yh9A/exec') return;
   fetch(TRACKER_URL, {
     method: 'POST',
     mode: 'no-cors',
