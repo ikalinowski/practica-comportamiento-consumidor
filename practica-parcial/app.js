@@ -9,7 +9,7 @@ let allQuestions = [];
 
 /* ── Analytics Tracker ── */
 const SESSION_ID = Math.random().toString(36).substring(2) + Date.now().toString(36);
-const TRACKER_URL = 'https://script.google.com/macros/s/AKfycbx5XBbTjqlOcaftUncXdeeFrrGnNFyua9pGXf58nsHbsN9kR9Hi4D4FLTcd29Ug98Yh9A/exec'; // ← Reemplazar con la URL del Apps Script desplegado
+const TRACKER_URL = 'TU_URL_AQUI'; // ← Reemplazar con la URL del Apps Script desplegado
 let examStartTime = null;
 
 function trackEvent(data) {
@@ -422,13 +422,66 @@ function calculateResults() {
   // Feedback cards
   document.getElementById('feedbackCards').innerHTML = questionResults.map((q, i) => renderFeedbackCard(q, i)).join('');
 
-  // ── Enviar resultados al tracker ──
+  // ── Enviar resultados al tracker (análisis pedagógico por respuesta) ──
   const tiempoMinutos = examStartTime
     ? Math.round((Date.now() - examStartTime) / 6000) / 10
     : null;
   const preguntasRespondidas = allQuestions.filter(q => isQuestionAnswered(q.id)).length;
-  const respuestasCompactas = {};
-  allQuestions.forEach(q => { if (answers[q.id]) respuestasCompactas[q.id] = answers[q.id]; });
+
+  // Construir detalle legible: una entrada por pregunta, con sub-partes expandidas
+  const respuestasDetalle = questionResults.map(q => {
+    const entry = {
+      seccion: q.sectionId,
+      titulo_seccion: q.sectionTitle,
+      pregunta_id: q.id,
+      tipo: q.type,
+      puntos_obtenidos: parseFloat(q.pointsEarned.toFixed(2)),
+      puntos_max: q.sectionPoints,
+      es_correcto: q.isCorrect,
+      es_parcial: q.isPartial,
+      sin_respuesta: q.isUnanswered,
+      partes: []
+    };
+    const userAnswer = q.userAnswer || {};
+    if (q.type === 'drag_drop') {
+      q.dropZones.forEach(zone => {
+        const placedId = userAnswer[zone.id];
+        const placedItem = placedId ? q.draggableItems.find(i => i.id === placedId) : null;
+        const correctId = q.correct[zone.id];
+        const correctItem = q.draggableItems.find(i => i.id === correctId);
+        entry.partes.push({
+          tipo: 'drag_drop',
+          zona: zone.label,
+          respuesta_alumno: placedItem ? placedItem.text : '(vacío)',
+          respuesta_correcta: correctItem ? correctItem.text : '',
+          ok: placedId === correctId
+        });
+      });
+    } else if (q.type === 'multi_part' || q.type === 'image_analysis') {
+      q.parts.forEach(part => {
+        const v = userAnswer[part.id];
+        if (part.type === 'free_text') {
+          entry.partes.push({
+            tipo: 'texto_libre',
+            parte: part.label,
+            respuesta_alumno: v || '(sin respuesta)'
+          });
+        } else if (part.type === 'choice') {
+          const chosen  = part.options.find(o => o.id === v);
+          const correct = part.options.find(o => o.id === part.correct);
+          entry.partes.push({
+            tipo: 'opcion',
+            parte: part.label,
+            respuesta_alumno:  chosen  ? chosen.text  : '(sin respuesta)',
+            respuesta_correcta: correct ? correct.text : '',
+            ok: v === part.correct
+          });
+        }
+      });
+    }
+    return entry;
+  });
+
   trackEvent({
     evento: 'resultado_final',
     timestamp: new Date().toISOString(),
@@ -439,7 +492,7 @@ function calculateResults() {
     tiempoMinutos: tiempoMinutos,
     preguntasRespondidas: preguntasRespondidas,
     totalPreguntas: allQuestions.length,
-    respuestasJson: JSON.stringify(respuestasCompactas)
+    respuestasDetalle: respuestasDetalle   // array estructurado → se expande en hoja "Respuestas"
   });
 }
 
