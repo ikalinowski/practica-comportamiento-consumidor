@@ -9,7 +9,7 @@ let allQuestions = [];
 
 /* ── Analytics Tracker ── */
 const SESSION_ID = Math.random().toString(36).substring(2) + Date.now().toString(36);
-const TRACKER_URL = 'TU_URL_AQUI'; // ← Reemplazar con la URL del Apps Script desplegado
+const TRACKER_URL = 'https://script.google.com/macros/s/AKfycbx5XBbTjqlOcaftUncXdeeFrrGnNFyua9pGXf58nsHbsN9kR9Hi4D4FLTcd29Ug98Yh9A/exec'; // ← Reemplazar con la URL del Apps Script desplegado
 let examStartTime = null;
 
 function trackEvent(data) {
