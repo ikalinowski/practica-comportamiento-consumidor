@@ -7,8 +7,25 @@ let timerInterval = null;
 let timeRemaining = 120 * 60;
 let allQuestions = [];
 
+/* ── Analytics Tracker ── */
+const SESSION_ID = Math.random().toString(36).substring(2) + Date.now().toString(36);
+const TRACKER_URL = 'TU_URL_AQUI'; // ← Reemplazar con la URL del Apps Script desplegado
+let examStartTime = null;
+
+function trackEvent(data) {
+  if (!TRACKER_URL || TRACKER_URL === 'TU_URL_AQUI') return;
+  fetch(TRACKER_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify({ sessionId: SESSION_ID, ...data })
+  }).catch(() => {}); // Nunca rompe la app aunque el tracker falle
+}
+
 /* ── Init ── */
-document.addEventListener('DOMContentLoaded', () => { renderExamCards(); });
+document.addEventListener('DOMContentLoaded', () => {
+  renderExamCards();
+  trackEvent({ evento: 'visita', timestamp: new Date().toISOString() });
+});
 
 /* ── Home Screen ── */
 function renderExamCards() {
@@ -81,6 +98,15 @@ function startExam() {
   updateProgress();
   switchScreen('screenExam');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  examStartTime = Date.now();
+  trackEvent({
+    evento: 'inicio_practica',
+    timestamp: new Date().toISOString(),
+    casoId: currentExam.id,
+    casoNombre: currentExam.caseName,
+    modo: timerMode
+  });
 }
 
 /* ── Timer ── */
@@ -395,6 +421,26 @@ function calculateResults() {
 
   // Feedback cards
   document.getElementById('feedbackCards').innerHTML = questionResults.map((q, i) => renderFeedbackCard(q, i)).join('');
+
+  // ── Enviar resultados al tracker ──
+  const tiempoMinutos = examStartTime
+    ? Math.round((Date.now() - examStartTime) / 6000) / 10
+    : null;
+  const preguntasRespondidas = allQuestions.filter(q => isQuestionAnswered(q.id)).length;
+  const respuestasCompactas = {};
+  allQuestions.forEach(q => { if (answers[q.id]) respuestasCompactas[q.id] = answers[q.id]; });
+  trackEvent({
+    evento: 'resultado_final',
+    timestamp: new Date().toISOString(),
+    casoId: currentExam.id,
+    casoNombre: currentExam.caseName,
+    modo: timerMode,
+    puntaje: parseFloat(totalScore.toFixed(2)),
+    tiempoMinutos: tiempoMinutos,
+    preguntasRespondidas: preguntasRespondidas,
+    totalPreguntas: allQuestions.length,
+    respuestasJson: JSON.stringify(respuestasCompactas)
+  });
 }
 
 function renderFeedbackCard(q, i) {
