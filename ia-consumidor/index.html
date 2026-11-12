@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La IA y tus decisiones de consumo · AD2007 UTEC · Ivo Kalinowski</title>
+<meta name="author" content="Ivo Kalinowski">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1224 885'%3E%3Crect width='1224' height='885' fill='%23111'/%3E%3Cpath fill='%23fff' d='M263 200h116v492H263zM525 200h116v172l192-172h129L718 437l244 255H833L641 513v179H525z'/%3E%3C/svg%3E">
+<meta name="description" content="Clase grabada del tema 6.15 de Comportamiento del Consumidor (AD2007, UTEC). Cómo cambió la IA, cómo te elige el algoritmo y dónde termina la ayuda y empieza la manipulación. Por Ivo Kalinowski.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Instrument+Serif:ital@1&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#111111; --bg2:#0b0b0f; --fg:#f5f5f7; --muted:#a1a1a6; --dim:#6e6e73;
+  --card:rgba(255,255,255,.055); --card2:rgba(255,255,255,.09); --line:rgba(255,255,255,.12);
+  --blue:#2997ff; --purple:#a78bfa; --pink:#ff6b9a; --orange:#ff9f0a; --green:#30d158; --teal:#64d2ff; --yellow:#ffd60a;
+  --grad:linear-gradient(100deg,#64d2ff 0%,#2997ff 30%,#a78bfa 62%,#ff6b9a 100%);
+  --radius:22px; --ease:cubic-bezier(.2,.8,.2,1);
+  --font:"Schibsted Grotesk",-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:"Instrument Serif",Georgia,serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --tinta:#111111; --papel:#fafaf7; --lavanda:#ddd7f6; --menta:#cdebdc;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ---------- deck ---------- */
+#deck{position:fixed;inset:0}
+.slide{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;transform:scale(1.025);
+  transition:opacity .7s var(--ease),transform .9s var(--ease),visibility 0s linear .7s;padding:clamp(64px,8vh,96px) clamp(16px,5vw,80px) 120px;
+  background:radial-gradient(1200px 700px at 85% -10%,rgba(41,151,255,.10),transparent 60%),radial-gradient(900px 600px at -10% 110%,rgba(167,139,250,.08),transparent 60%),var(--bg)}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .7s var(--ease),transform .9s var(--ease),visibility 0s}
+.slide.prev{transform:scale(.975)}
+.slide.light{--fg:#111111;--muted:#515154;--dim:#86868b;--card:rgba(0,0,0,.04);--card2:rgba(0,0,0,.07);--line:rgba(0,0,0,.1);background:var(--papel);color:var(--fg)}
+.wrap{max-width:1180px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center}
+.slide::-webkit-scrollbar{width:8px}.slide::-webkit-scrollbar-thumb{background:rgba(127,127,127,.3);border-radius:8px}
+
+/* reveal */
+.r{opacity:0;transform:translateY(18px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.slide.active .r{opacity:1;transform:none}
+.slide.active .r:nth-child(2){transition-delay:.08s}.slide.active .r:nth-child(3){transition-delay:.16s}
+.slide.active .r:nth-child(4){transition-delay:.24s}.slide.active .r:nth-child(5){transition-delay:.32s}
+.slide.active .r:nth-child(6){transition-delay:.40s}.slide.active .r:nth-child(7){transition-delay:.48s}
+
+/* type */
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta);background:var(--lavanda);padding:5px 9px;width:fit-content;align-self:flex-start;margin-bottom:16px}
+.eyebrow.edu{background:var(--menta)}
+.hl{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;background:var(--lavanda);color:var(--tinta);display:inline-block;line-height:.98;padding:.03em .14em .07em;margin-top:.14em}
+.ik{display:block;fill:currentColor;aspect-ratio:1224/885}
+.sig{font-size:clamp(15px,1.5vw,18px);color:var(--muted);margin-top:22px}
+.sig b{color:var(--fg);font-weight:600}
+.sig em{font-family:var(--serif);font-size:1.22em;color:var(--fg)}
+.signoff{display:flex;align-items:center;gap:14px;margin-top:28px}
+.signoff .ik{height:44px}
+.signoff b{display:block;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.signoff em{font-family:var(--serif);font-size:19px;color:var(--muted)}
+::selection{background:var(--lavanda);color:var(--tinta)}
+h1{font-size:clamp(44px,8.4vw,112px);line-height:1.02;letter-spacing:-.045em;font-weight:800}
+h2{font-size:clamp(34px,5.2vw,68px);line-height:1.05;letter-spacing:-.035em;font-weight:700;margin-bottom:18px}
+h3{font-size:clamp(19px,1.8vw,24px);letter-spacing:-.015em;font-weight:650;line-height:1.2}
+.lead{font-size:clamp(18px,2vw,26px);line-height:1.38;color:var(--muted);letter-spacing:-.01em;max-width:860px}
+.lead b,.lead strong{color:var(--fg);font-weight:600}
+p{line-height:1.5}
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.small{font-size:14px;color:var(--muted);line-height:1.45}
+.tiny{font-size:12px;color:var(--dim);line-height:1.4}
+.mt8{margin-top:8px}.mt16{margin-top:16px}.mt24{margin-top:24px}.mt32{margin-top:32px}.mt48{margin-top:48px}
+
+/* layout */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center}
+@media (max-width:960px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.split{grid-template-columns:1fr}}
+@media (max-width:620px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:transform .4s var(--ease),background .3s}
+.card:hover{background:var(--card2)}
+.card h3{margin-bottom:8px}
+.card p{color:var(--muted);font-size:15.5px}
+.icon{font-size:28px;margin-bottom:12px;display:block}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--card2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.chip.ok{color:var(--green)}.chip.warn{color:var(--orange)}.chip.blue{color:var(--blue)}.chip.pink{color:var(--pink)}
+.stat{font-size:clamp(40px,5.4vw,72px);font-weight:800;letter-spacing:-.04em;line-height:1}
+.g4 .stat{font-size:clamp(34px,4vw,54px)}
+.src{font-size:12px;color:var(--dim);margin-top:10px}
+.src a{color:var(--dim);text-decoration:underline}
+
+/* ---------- cover ---------- */
+.cover{background:var(--tinta)}
+.cover .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55;animation:float 14s ease-in-out infinite}
+.cover .o1{width:520px;height:520px;background:#2997ff;top:-120px;right:-80px}
+.cover .o2{width:460px;height:460px;background:#a78bfa;bottom:-160px;left:-120px;animation-delay:-5s}
+.cover .o3{width:300px;height:300px;background:#ff6b9a;top:40%;left:55%;animation-delay:-9s;opacity:.35}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+.cover .wrap{position:relative;z-index:2;align-items:flex-start}
+.cover .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}
+.kbd{display:inline-block;font-size:12px;font-weight:600;padding:3px 8px;border-radius:7px;border:1px solid var(--line);background:var(--card2);color:var(--muted)}
+
+/* ---------- agenda ---------- */
+.agenda{counter-reset:a}
+.agenda button{text-align:left;width:100%;display:flex;gap:14px;align-items:baseline;padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);transition:.3s var(--ease)}
+.agenda button:hover{background:var(--card2);transform:translateY(-2px)}
+.agenda .n{font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums;min-width:28px}
+.agenda .t{font-weight:600}.agenda .m{margin-left:auto;font-size:12px;color:var(--dim);white-space:nowrap}
+
+/* ---------- flip cards ---------- */
+.flip{perspective:1400px;height:250px;cursor:pointer}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .8s var(--ease);transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;border:1px solid var(--line)}
+.flip .front{background:var(--card)}
+.flip .back{transform:rotateY(180deg);background:linear-gradient(160deg,rgba(41,151,255,.22),rgba(167,139,250,.18));border-color:rgba(41,151,255,.4)}
+.flip .tag{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.flip .front .tag{color:var(--dim)}.flip .back .tag{color:var(--teal)}
+.flip h3{font-size:20px}
+.flip p{font-size:15px;color:var(--muted);margin-top:8px}
+.flip .back p{color:#d9d9de}
+.flip .hint{margin-top:auto;font-size:12px;color:var(--dim)}
+@media (max-width:620px){.flip{height:230px}}
+
+/* ---------- timeline ---------- */
+.tl{position:relative;display:flex;gap:12px;overflow-x:auto;padding:28px 4px 18px;scroll-snap-type:x mandatory}
+.tl::before{content:"";position:absolute;left:0;right:0;top:41px;height:2px;background:linear-gradient(90deg,transparent,var(--line) 4%,var(--line) 96%,transparent)}
+.tl::-webkit-scrollbar{height:6px}.tl::-webkit-scrollbar-thumb{background:rgba(127,127,127,.35);border-radius:6px}
+.ev{flex:0 0 auto;scroll-snap-align:start;display:flex;flex-direction:column;align-items:flex-start;gap:12px;width:120px;text-align:left}
+.ev .dot{width:28px;height:28px;border-radius:50%;background:var(--bg);border:2px solid var(--dim);position:relative;z-index:1;transition:.3s var(--ease);display:grid;place-items:center;font-size:12px}
+.ev .d{font-size:12px;font-weight:700;color:var(--dim);letter-spacing:.02em}
+.ev .l{font-size:13.5px;font-weight:600;line-height:1.25}
+.ev:hover .dot,.ev.sel .dot{transform:scale(1.25);border-color:var(--c,var(--blue));background:var(--c,var(--blue))}
+.ev.sel .d{color:var(--c,var(--blue))}
+.tl-detail{min-height:118px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.tl-detail .big{font-size:44px;line-height:1}
+.tl-detail h3{font-size:24px;margin-bottom:6px}
+
+/* ---------- tabs ---------- */
+.seg{display:inline-flex;gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line);flex-wrap:wrap}
+.seg button{padding:9px 16px;border-radius:10px;font-weight:600;font-size:14.5px;color:var(--muted);transition:.25s var(--ease)}
+.seg button.on{background:var(--fg);color:var(--bg)}
+.pane{display:none}.pane.on{display:grid;animation:pop .5s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.model{display:flex;flex-direction:column;gap:6px}
+.model .name{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.model .when{font-size:12px;font-weight:600;color:var(--dim)}
+.model p{font-size:14.5px}
+
+/* ---------- video ---------- */
+.video{border-radius:20px;overflow:hidden;background:#111;border:1px solid var(--line);display:flex;flex-direction:column}
+.video .screen{position:relative;aspect-ratio:16/9;background:#000 center/cover no-repeat;cursor:pointer;overflow:hidden}
+.video .screen::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 40%,rgba(0,0,0,.65))}
+.video .play{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:grid;place-items:center;transition:.3s var(--ease);border:1px solid rgba(255,255,255,.35)}
+.video .screen:hover .play{transform:translate(-50%,-50%) scale(1.08);background:rgba(255,255,255,.32)}
+.video .play svg{width:24px;height:24px;margin-left:4px;fill:#fff}
+.video .range{position:absolute;z-index:2;left:12px;bottom:12px;font-size:12px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);padding:5px 9px;border-radius:8px;backdrop-filter:blur(8px)}
+.video .lang{position:absolute;z-index:2;right:12px;top:12px;font-size:11px;font-weight:800;color:#fff;background:rgba(0,0,0,.55);padding:4px 8px;border-radius:7px}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:5}
+.video .screen.playing{cursor:default}
+.video .screen.playing::after,.video .screen.playing .play,.video .screen.playing .range,.video .screen.playing .lang{display:none}
+.video .cap{padding:12px 14px 14px;display:flex;flex-direction:column;gap:3px;background:var(--card)}
+.video .cap b{font-size:14px;line-height:1.3;color:var(--fg);font-weight:600}
+.video .cap span{font-size:12px;color:var(--dim)}
+.video .cap a{font-size:12px}
+.slide.light .video{background:#000}
+.slide.light .video .cap{background:#fff}
+
+/* ---------- AGI levels ---------- */
+.levels{display:flex;flex-direction:column;gap:8px}
+.lv{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-align:left;transition:.3s var(--ease);position:relative}
+.lv .num{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:800;background:var(--card2);flex:0 0 auto}
+.lv .tx b{display:block;font-size:16px}.lv .tx span{font-size:13.5px;color:var(--muted)}
+.lv.on{border-color:var(--blue);background:rgba(41,151,255,.12)}
+.lv.done .num{background:var(--green);color:#000}
+.lv.now .num{background:var(--orange);color:#000}
+.lv .here{margin-left:auto;font-size:11px;font-weight:800;color:#000;background:var(--orange);padding:4px 8px;border-radius:999px;white-space:nowrap}
+
+/* poll */
+.poll .opt{display:grid;grid-template-columns:110px 1fr 40px 40px 40px;align-items:center;gap:8px;margin:8px 0}
+.poll .bar{height:30px;border-radius:9px;background:var(--card);overflow:hidden;position:relative}
+.poll .bar i{position:absolute;inset:0 auto 0 0;width:0;background:var(--grad);border-radius:9px;transition:width .6s var(--ease)}
+.poll .bar em{position:absolute;right:10px;top:6px;font-style:normal;font-size:13px;font-weight:700}
+.poll .lab{font-weight:600;font-size:14.5px}
+.poll .pm{width:36px;height:30px;border-radius:9px;background:var(--card2);font-weight:800}
+.poll .pm:hover{background:var(--blue);color:#fff}
+.poll .cnt{text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+@media (max-width:620px){.poll .opt{grid-template-columns:80px 1fr 34px 34px 34px}}
+
+/* METR slider */
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:var(--card2);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:0;cursor:pointer}
+.meter{display:flex;align-items:flex-end;gap:6px;height:170px;margin-top:18px}
+.meter div{flex:1;border-radius:8px 8px 3px 3px;background:var(--grad);opacity:.9;transition:height .5s var(--ease);min-height:3px}
+
+/* prompt builder */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12.5px;font-weight:600;color:var(--muted)}
+select,input[type=text],textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px;outline:none;width:100%}
+select:focus,input[type=text]:focus{border-color:var(--blue)}
+.slide.light select,.slide.light input[type=text]{background:#fff}
+.out{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55;background:#0b0b0f;color:#e8e8ed;border-radius:18px;padding:20px;min-height:260px;border:1px solid rgba(255,255,255,.08)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;background:var(--blue);color:#fff;font-weight:600;font-size:15px;transition:.25s var(--ease)}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn.ghost{background:var(--card2);color:var(--fg)}
+
+/* quiz */
+.q{display:none}.q.on{display:block;animation:pop .5s var(--ease)}
+.q .opts{display:grid;gap:10px;margin-top:22px}
+.q .opts button{text-align:left;padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:17px;font-weight:500;transition:.25s var(--ease)}
+.q .opts button:hover{background:var(--card2)}
+.q .opts button.right{background:rgba(48,209,88,.18);border-color:var(--green)}
+.q .opts button.wrong{background:rgba(255,69,58,.15);border-color:#ff453a}
+.q .why{margin-top:16px;color:var(--muted);min-height:48px}
+.qdots{display:flex;gap:6px}
+.qdots i{width:28px;height:4px;border-radius:4px;background:var(--card2)}
+.qdots i.on{background:var(--blue)}
+
+/* creators */
+.cr{display:flex;flex-direction:column;gap:10px}
+.cr .av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff}
+.cr .who{font-weight:700;font-size:17px}
+.cr .what{font-size:14px;color:var(--muted);line-height:1.45}
+.cr a.go{font-size:13.5px;font-weight:600;margin-top:auto}
+
+/* case cards */
+.case .num{font-size:clamp(30px,3.4vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:8px 0}
+.conf{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+
+/* ---------- chrome ---------- */
+#bar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;
+  background:rgba(28,28,30,.72);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 40px rgba(0,0,0,.35);color:#f5f5f7;transition:opacity .4s}
+#bar button{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#f5f5f7;transition:.2s}
+#bar button:hover{background:rgba(255,255,255,.12)}
+#bar svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#bar .ttl{font-size:13px;font-weight:600;padding:0 10px;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bar .ctr{font-size:12px;color:#a1a1a6;font-variant-numeric:tabular-nums;padding-right:8px}
+#bar .tm{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;padding:0 10px;border-left:1px solid rgba(255,255,255,.12);color:#a1a1a6;cursor:pointer}
+#bar .tm.run{color:var(--green)}
+@media (max-width:700px){#bar .ttl{display:none}}
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--lavanda);z-index:60;transition:width .6s var(--ease)}
+#brand{position:fixed;top:12px;left:14px;z-index:40;display:flex;align-items:center;gap:10px;padding:7px 10px;font-size:14px;font-weight:600;letter-spacing:-.01em;color:var(--papel);background:var(--tinta);pointer-events:none;transition:opacity .4s}
+#brand .ik{height:26px}
+body.on-light #brand{color:var(--tinta);background:var(--papel)}
+body.on-light #progress{background:var(--tinta)}
+
+#overview{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.82);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);display:none;overflow:auto;padding:70px clamp(16px,5vw,70px)}
+#overview.on{display:block;animation:pop .4s var(--ease)}
+#overview .og{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;max-width:1200px;margin:24px auto 0}
+#overview button{text-align:left;padding:18px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);min-height:110px;display:flex;flex-direction:column;gap:8px;color:#f5f5f7}
+#overview button:hover{background:rgba(255,255,255,.12)}
+#overview button.cur{border-color:var(--blue)}
+#overview .on2{font-size:12px;color:#86868b;font-weight:700}
+#overview h2{max-width:1200px;margin:0 auto;font-size:34px}
+
+#notes{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);z-index:55;width:min(760px,calc(100vw - 32px));max-height:42vh;overflow:auto;padding:20px 22px;border-radius:20px;
+  background:rgba(28,28,30,.9);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.12);color:#e8e8ed;opacity:0;pointer-events:none;transition:.35s var(--ease);font-size:15px;line-height:1.55}
+#notes.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+#notes h4{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+#notes ul{padding-left:18px}#notes li{margin:4px 0}
+
+#toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-20px);z-index:90;padding:12px 18px;border-radius:14px;background:rgba(28,28,30,.92);color:#f5f5f7;font-size:14px;max-width:min(640px,calc(100vw - 32px));opacity:0;pointer-events:none;transition:.4s var(--ease);border:1px solid rgba(255,255,255,.12)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.hide-ui #bar,.hide-ui #brand{opacity:0}
+
+/* ---------- añadidos para esta sesión ---------- */
+.sig1{padding:16px 18px}.sig1 .icon{font-size:24px;margin-bottom:6px}.sig1 h3{font-size:17px;margin:0}
+.wbar{display:grid;grid-template-columns:120px 1fr;align-items:center;gap:12px;margin:12px 0}
+.wbar span{font-weight:600;font-size:15px}
+.wbar div{height:18px;border-radius:9px;background:var(--card2);overflow:hidden}
+.wbar i{display:block;height:100%;background:var(--grad);border-radius:9px}
+
+.loop{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:54px}
+.loop .ls{position:relative}
+.loop .ls b{display:block;font-size:34px;font-weight:800;line-height:1;margin-bottom:10px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.loop .ls::after{position:absolute;font-size:28px;font-weight:800;color:var(--orange)}
+.loop .ls:nth-child(1)::after{content:"→";right:-40px;top:50%;transform:translateY(-50%)}
+.loop .ls:nth-child(2)::after{content:"↓";bottom:-46px;left:50%;transform:translateX(-50%)}
+.loop .ls:nth-child(4)::after{content:"←";left:-40px;top:50%;transform:translateY(-50%)}
+.loop .ls:nth-child(3)::after{content:"↑";top:-46px;left:50%;transform:translateX(-50%)}
+.loop .lc{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:28px;background:var(--bg);border:1px solid var(--line);color:var(--orange);z-index:2}
+
+.sim{display:grid;grid-template-columns:1fr 320px;gap:16px}
+.feed{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.post{border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--line);text-align:left;display:flex;flex-direction:column;min-height:150px;transition:.25s var(--ease)}
+.post:hover{transform:translateY(-3px);background:var(--card2)}
+.post .ph{height:50px;padding:8px 12px;display:flex;align-items:flex-end;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#111}
+.post .tx{padding:10px 12px;font-weight:600;font-size:15px;line-height:1.3;flex:1}
+.post .lk{padding:0 12px 10px;font-size:12px;color:var(--dim)}
+.post.nuevo{animation:pop .45s var(--ease)}
+.spanel{display:flex;flex-direction:column}
+.brow{display:grid;grid-template-columns:94px 1fr 40px;gap:8px;align-items:center;margin-top:10px;font-size:13.5px;font-weight:600}
+.brow .t{height:12px;border-radius:6px;background:var(--card2);overflow:hidden}
+.brow .t i{display:block;height:100%;border-radius:6px;transition:width .5s var(--ease)}
+.brow .p{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+#msg{min-height:60px}#msg b{color:var(--fg)}
+@media (max-width:960px){.sim{grid-template-columns:1fr}.feed{grid-template-columns:repeat(2,minmax(0,1fr))}.loop{gap:40px}}
+
+.fun .fl{display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:16px;margin:0 auto 10px;color:#111}
+.fun .fl b{font-size:30px;font-weight:800;min-width:110px;letter-spacing:-.03em}
+.fun .fl span{font-weight:600;font-size:16px}
+.fun .fl:nth-child(1){width:100%;background:var(--teal)}
+.fun .fl:nth-child(2){width:86%;background:var(--blue);color:#fff}
+.fun .fl:nth-child(3){width:72%;background:var(--purple)}
+.fun .fl:nth-child(4){width:58%;background:var(--pink)}
+
+.bc .scr{margin:14px 0 12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;font-weight:700;font-size:17px;line-height:1.3;text-align:center;min-height:86px;display:grid;place-items:center;color:var(--fg);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.bc .scr s{color:var(--dim);font-weight:600}
+
+.am ul{list-style:none;margin-top:10px}
+.am li{padding:7px 0 7px 30px;position:relative;font-size:16.5px;color:var(--fg)}
+.am li::before{position:absolute;left:0;top:6px;font-weight:800;font-size:17px}
+.am.ok{border-color:rgba(48,209,88,.45);background:rgba(48,209,88,.08)}
+.am.no{border-color:rgba(255,69,58,.45);background:rgba(255,69,58,.08)}
+.am.ok h3{color:var(--green)}.am.no h3{color:#ff6961}
+.am.ok li::before{content:"✓";color:var(--green)}.am.no li::before{content:"✕";color:#ff6961}
+
+.step{display:flex;gap:16px;align-items:flex-start}
+.step b{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--tinta);color:#fff;font-weight:800}
+.step p{color:var(--fg);font-size:16.5px}
+#flips .flip{height:212px}
+@media (max-width:620px){#flips .flip{height:230px}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ik" viewBox="0 0 1224 885"><path fill-rule="evenodd" d="M0 0H1224V885H0ZM38 38V847H1186V38Z"/><rect x="263" y="200" width="116" height="492" rx="10"/><path d="M533 208H633V390L836 208H942L706.7 436.7L943 684H836L633 495V684H533Z" stroke="currentColor" stroke-width="16" stroke-linejoin="round"/></symbol></svg>
+<div id="brand"><svg class="ik" role="img" aria-label="Logo IK"><use href="#ik"/></svg><span>Ivo Kalinowski</span></div>
+
+<main id="deck">
+
+<!-- 1 · PORTADA -->
+<section class="slide cover" data-title="Portada" data-min="1" data-notes="<ul><li>Bienvenida. Esta es la clase del tema 6.15 que quedó pendiente. Dura unos 35 minutos sin contar los clips.</li><li>Pide que tengan a la mano el celular y lo último que compraron o vieron por internet.</li><li>Atajos ← → para avanzar, O para el índice, N para estas notas, T para el cronómetro.</li></ul>">
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+  <div class="wrap">
+    <div class="eyebrow r">Comportamiento del Consumidor · AD2007 · Tema 6.15</div>
+    <h1 class="r">La IA ya no solo<br><span class="grad">te recomienda.</span><br>Ahora elige contigo.</h1>
+    <p class="lead r mt24">Una clase de 35 minutos sobre cómo cambió la IA y qué significa para tus decisiones de compra. Qué hacía antes, qué hace hoy, qué todavía no puede y cómo te elige el algoritmo.</p>
+    <p class="sig r"><b>Por Ivo Kalinowski</b> · <em>Tecnología con criterio humano.</em></p>
+    <div class="meta r">
+      <span class="chip">🎓 UTEC · Ciclo 2026-2</span>
+      <span class="chip">🎬 Clips cortos de video</span>
+      <span class="chip">🖐️ Interactivo</span>
+      <span class="chip"><span class="kbd">←</span><span class="kbd">→</span> navegar · <span class="kbd">O</span> índice<span class="notes-only"> · <span class="kbd">N</span> notas</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · AGENDA -->
+<section class="slide" data-title="El mapa de hoy" data-min="1" data-notes="<ul><li>Muestra el recorrido. Cada bloque se abre con un clic si quieres saltar.</li><li>Tres partes. Cómo cambió la IA (paradas 01 a 05), cómo te elige el algoritmo (06 a 11) y qué significa para ti y para BB Soft (12 a 14).</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">El mapa de hoy</div>
+    <h2 class="r">Catorce paradas. <span class="muted">Treinta y cinco minutos.</span></h2>
+    <div class="grid g3 agenda mt24 r" id="agenda"></div>
+  </div>
+</section>
+
+<!-- 3 · PREGUNTA DE ARRANQUE -->
+<section class="slide" data-title="Antes de empezar" data-min="1" data-notes="<ul><li>Pide que piensen en lo último que compraron por internet o en el último video que vieron.</li><li>Que elijan una opción en la pantalla. No hay respuesta correcta. Al final de la clase vuelven a esta pregunta.</li></ul>">
+  <div class="wrap" style="max-width:900px">
+    <div class="eyebrow r">Antes de empezar</div>
+    <h2 class="r">¿Lo buscaste tú<br>o <span class="grad">te apareció?</span></h2>
+    <p class="lead r">Piensa en lo último que compraste por internet, o en el último video que viste en TikTok, YouTube o Netflix. Elige una opción.</p>
+    <div class="q on r"><div class="opts" id="start"></div><p class="why" id="startWhy"></p></div>
+  </div>
+</section>
+
+<!-- 4 · EN SIMPLE -->
+<section class="slide" data-title="La IA, en simple" data-min="2" data-notes="<ul><li>Idea fuerza. La IA es una máquina que predice. Aprende patrones de muchos datos y adivina lo que viene.</li><li>Recorre las cuatro tarjetas. La última conecta con BB Soft. Si compras pañales cada diez días, un sistema puede saber cuándo se te acaban.</li><li>Cierra con esto. Cuando escuchen IA, que piensen en predicción.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">01 · En simple</div>
+    <h2 class="r">La IA es una máquina <span class="grad">que predice.</span></h2>
+    <p class="lead r">Aprende patrones de muchísimos datos para adivinar lo que viene. Con esa idea entiendes casi todo lo demás.</p>
+    <div class="grid g4 mt32 r">
+      <div class="card"><span class="icon">⌨️</span><h3>Tu teclado</h3><p>Adivina la siguiente palabra que vas a escribir.</p></div>
+      <div class="card"><span class="icon">🎬</span><h3>Netflix</h3><p>Adivina la siguiente serie que vas a ver.</p></div>
+      <div class="card"><span class="icon">💳</span><h3>Tu banco</h3><p>Adivina si una compra rara con tu tarjeta es un fraude.</p></div>
+      <div class="card"><span class="icon">🧷</span><h3>Tu compra de pañales</h3><p>Si compras cada diez días, puede adivinar cuándo se te acaban y avisarte un día antes.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · ANTES / AHORA -->
+<section class="slide" data-title="Antes no podía. Ahora sí." data-min="3" data-notes="<ul><li>Toca cada tarjeta para voltearla. Antes de voltear pregunta si creen que la IA ya puede hacer eso.</li><li>No hace falta voltear las ocho. Elige cuatro o cinco.</li><li>Idea fuerza. Cada avance le quita un paso a la compra, y cada paso menos es menos tiempo para pensar. Es el Sistema 1 trabajando.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">02 · El gran salto</div>
+    <h2 class="r">Antes no podía. <span class="grad">Ahora sí.</span></h2>
+    <p class="lead r">Toca cada tarjeta. Al frente, cómo era antes. Al voltear, lo que hace hoy cuando compras.</p>
+    <div class="grid g4 mt24 r" id="flips"></div>
+  </div>
+</section>
+
+<!-- 6 · LÍNEA DE TIEMPO -->
+<section class="slide" data-title="La historia en una línea" data-min="2" data-notes="<ul><li>Recorre la línea con clics. Elige cuatro o cinco hitos, no todos.</li><li>Mensaje. La IA lleva años decidiendo qué ves cuando compras. Lo nuevo desde 2022 es que conversa, y desde 2025 que también puede pagar.</li><li>Target y las portadas de Netflix vuelven más adelante.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">03 · La historia en una línea</div>
+    <h2 class="r">Treinta años decidiendo <span class="grad">qué ves.</span></h2>
+    <p class="lead r">Haz clic en cada punto. Son los momentos que cambiaron la forma de comprar.</p>
+    <div class="tl r" id="tl"></div>
+    <div class="card tl-detail mt16 r" id="tld"></div>
+  </div>
+</section>
+
+<!-- 7 · LO QUE TODAVÍA NO HACE -->
+<section class="slide light" data-title="Lo que todavía no hace bien" data-min="2" data-notes="<ul><li>Contrapeso honesto. La IA es potente, pero tiene límites claros.</li><li>Detente en la segunda tarjeta. La bodega, el mostrador y el consejo del bodeguero no le llegan. Ahí está el valor de su trabajo de campo.</li><li>La cuarta conecta con hábitos. La IA repite tu pasado y le cuesta ver un cambio de vida.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">04 · Con los pies en la tierra</div>
+    <h2 class="r">Lo que <span class="grad">todavía no</span> hace bien.</h2>
+    <div class="grid g4 mt24 r">
+      <div class="card"><span class="icon">❤️</span><h3>No sabe lo que sientes</h3><p>Ve lo que haces en la pantalla. No sabe por qué lo haces.</p></div>
+      <div class="card"><span class="icon">🏪</span><h3>No ve lo que no está en datos</h3><p>La bodega, el mostrador y el consejo del bodeguero no le llegan.</p></div>
+      <div class="card"><span class="icon">⚠️</span><h3>Se equivoca con seguridad</h3><p>Puede inventar un dato, un precio o una reseña y decirlo sin dudar.</p></div>
+      <div class="card"><span class="icon">🔁</span><h3>Repite tu pasado</h3><p>Si siempre compraste lo mismo, cree que siempre lo querrás. Le cuesta ver un cambio de vida.</p></div>
+    </div>
+    <div class="card mt24 r" style="border-left:4px solid var(--orange)"><h3>Para tu trabajo de campo</h3><p style="font-size:17px">La IA te dice qué hace la gente. El porqué lo investigas tú, en la bodega y con la mamá que compra.</p></div>
+  </div>
+</section>
+
+<!-- 8 · AGENTES -->
+<section class="slide" data-title="De chatbot a agente que compra" data-min="2" data-notes="<ul><li>La palabra del momento es agente. Un agente recibe un objetivo, compara opciones y vuelve con la tarea hecha.</li><li>Ejemplo. Desde setiembre de 2025 se puede pagar dentro de ChatGPT, por ahora en EE. UU.</li><li>Pregunta para pensar. ¿A quién le haces marketing cuando decide una máquina?</li><li>Revisa los dos clips antes de grabar y ajusta el minuto de inicio si hace falta.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">05 · La palabra del momento</div>
+    <h2 class="r">De chatbot a <span class="grad">agente que compra.</span></h2>
+    <div class="split mt16">
+      <div class="r">
+        <p class="lead">Un agente recibe un <b>objetivo</b>, compara opciones y vuelve con la <b>compra hecha</b>. Tú solo apruebas.</p>
+        <div class="grid g2 mt24">
+          <div class="card"><span class="icon">🔎</span><h3>Busca</h3><p>«Pañales talla M para piel sensible, menos de 40 soles.»</p></div>
+          <div class="card"><span class="icon">⚖️</span><h3>Compara</h3><p>Precio, reseñas, stock y tiempo de entrega en varias tiendas.</p></div>
+          <div class="card"><span class="icon">🛒</span><h3>Arma el carrito</h3><p>Elige la opción que mejor calza con lo que le pediste.</p></div>
+          <div class="card"><span class="icon">💳</span><h3>Paga</h3><p>Con tu permiso, sin que entres a la tienda.</p></div>
+        </div>
+      </div>
+      <div class="r">
+        <div class="card"><span class="chip warn">💬 Para pensar</span><p class="mt8" style="color:var(--fg);font-size:19px;line-height:1.4">¿A quién le haces marketing cuando decide una máquina?</p><p class="mt8">Antes la marca convencía a una persona con el empaque y la góndola. Ahora también tiene que convencer al asistente, que mira datos, reseñas, stock y precio.</p></div>
+        <div class="grid g2 mt16">
+          <div class="video" data-id="bdxAgdTwxW4" data-start="0" data-lang="ES" data-title="La IA ya compra por ti" data-ch="Comercio agéntico explicado · YouTube"></div>
+          <div class="video" data-id="nNIm6d5YIhI" data-start="0" data-lang="ES" data-title="Compras hechas por agentes de IA" data-ch="La próxima frontera de los pagos · YouTube"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · HUELLAS -->
+<section class="slide" data-title="Tus huellas" data-min="2" data-notes="<ul><li>Cada cosa que hacen deja una señal. Lee dos o tres ejemplos.</li><li>Idea fuerza. Al algoritmo le pesa más lo que haces que lo que dices. Es la misma distinción de su método de campo, el episodio concreto frente a la opinión declarada.</li><li>Clip sobre lo que no conviene contarle a una IA, unos dos minutos.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">06 · Tus huellas</div>
+    <h2 class="r">Lo que haces pesa más <span class="grad">que lo que dices.</span></h2>
+    <div class="split mt16" style="align-items:start">
+      <div class="r">
+        <div class="grid g2">
+          <div class="card sig1"><span class="icon">⏱️</span><h3>Cuánto miras un video</h3></div>
+          <div class="card sig1"><span class="icon">🛒</span><h3>Lo que dejas en el carrito</h3></div>
+          <div class="card sig1"><span class="icon">🌙</span><h3>A qué hora compras</h3></div>
+          <div class="card sig1"><span class="icon">🔎</span><h3>Lo que buscas y no compras</h3></div>
+          <div class="card sig1"><span class="icon">📍</span><h3>Dónde estás</h3></div>
+          <div class="card sig1"><span class="icon">👥</span><h3>A quién sigues</h3></div>
+        </div>
+      </div>
+      <div class="r">
+        <div class="card">
+          <h3>Lo que más le pesa al algoritmo</h3>
+          <div class="wbar mt16"><span>Lo que dices</span><div><i style="width:26%;background:var(--dim)"></i></div></div>
+          <div class="wbar"><span>Lo que haces</span><div><i style="width:92%"></i></div></div>
+          <p class="mt16">Puedes decir que no te gustan los videos de gatitos. Si te quedas mirándolos, te va a mostrar más.</p>
+        </div>
+        <div class="video mt16" data-id="vfkyJiEqsuE" data-start="259" data-end="387" data-lang="ES" data-title="Lo que nunca le debes contar a la IA" data-ch="ElShowDelNerd · 15 oct 2026"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · EL CICLO -->
+<section class="slide" data-title="El ciclo de la personalización" data-min="2" data-notes="<ul><li>Recorre los cuatro pasos. Haces algo, la app lo registra, el modelo predice y te muestra algo nuevo. Tu reacción vuelve a entrar.</li><li>TikTok explica que su feed Para ti se arma sobre todo con tus interacciones, lo que ves completo, compartes, comentas o saltas.</li><li>Cierre. Si quieres cambiar lo que te aparece, cambia lo que haces. Decirlo no basta.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">07 · El ciclo</div>
+    <h2 class="r">Un ciclo que <span class="grad">nunca se detiene.</span></h2>
+    <div class="split mt16">
+      <div class="loop r">
+        <div class="card ls"><b>1</b><h3>Haces algo</h3><p>Miras, tocas, compras o saltas.</p></div>
+        <div class="card ls"><b>2</b><h3>La app lo registra</h3><p>Cada segundo cuenta.</p></div>
+        <div class="card ls"><b>4</b><h3>Te muestra algo nuevo</h3><p>Y tu reacción vuelve a entrar.</p></div>
+        <div class="card ls"><b>3</b><h3>El modelo predice</h3><p>Qué te va a gustar después.</p></div>
+        <div class="lc">↻</div>
+      </div>
+      <div class="r">
+        <div class="card"><span class="chip blue">Lo que dice TikTok</span><p class="mt8" style="color:var(--fg);font-size:17px;line-height:1.45">Su feed «Para ti» se arma sobre todo con tus interacciones. Lo que ves completo, lo que compartes, lo que comentas y lo que saltas.</p></div>
+        <div class="video mt16" data-id="mDIavc3tBts" data-start="0" data-lang="ES" data-title="Cómo funciona el algoritmo de TikTok" data-ch="Explicación en español · YouTube"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · SIMULADOR -->
+<section class="slide" data-title="Entrena a tu algoritmo" data-min="2" data-notes="<ul><li>Demostración en vivo. Toca cinco veces videos del mismo tema y muestra cómo cambian las barras.</li><li>Cuando un tema pase del 60%, aparece el mensaje de la burbuja. Ese es el puente a la parada 11.</li><li>Botón Empezar de nuevo para repetir.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">08 · Pruébalo</div>
+    <h2 class="r">Entrena a <span class="grad">tu algoritmo.</span></h2>
+    <p class="lead r">Toca los videos que te gustarían. Cada toque es una señal. Mira qué pasa con tu feed.</p>
+    <div class="sim mt24 r">
+      <div class="feed" id="feed"></div>
+      <div class="card spanel">
+        <h3>Así está tu feed</h3>
+        <div id="bars" class="mt8"></div>
+        <p class="small mt16" id="msg"></p>
+        <button class="btn ghost mt16" id="reset">Empezar de nuevo ↺</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · QUÉ TE PERSONALIZAN -->
+<section class="slide" data-title="Qué te personalizan" data-min="2" data-notes="<ul><li>Usa las pestañas. Lo que ves, el orden, la oferta y el precio.</li><li>Dato fuerte. Según el propio equipo de Netflix, el 80% de las horas vistas viene de sus recomendaciones (Gomez-Uribe y Hunt, 2016).</li><li>En precio, aclara que los precios dinámicos por demanda son comunes. Los precios distintos por persona existen, pero los reguladores los vigilan.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">09 · A tu medida</div>
+    <h2 class="r">Qué te <span class="grad">personalizan.</span></h2>
+    <div class="seg r" id="tabs">
+      <button class="on" data-p="ves">Lo que ves</button><button data-p="orden">El orden</button><button data-p="oferta">La oferta</button><button data-p="precio">El precio</button>
+    </div>
+    <div class="mt24 r">
+      <div class="pane grid g3 on" data-p="ves">
+        <div class="card"><div class="stat grad">80%</div><p class="mt8">De las horas que se ven en Netflix vienen de sus recomendaciones.</p><div class="src">Gomez-Uribe y Hunt (2016), equipo de Netflix</div></div>
+        <div class="card"><span class="icon">🖼️</span><h3>La portada cambia</h3><p>Netflix muestra una imagen distinta del mismo título según lo que sueles ver. Si ves romance, la pareja. Si ves acción, la persecución.</p></div>
+        <div class="card"><span class="icon">📱</span><h3>Tu feed no es el mío</h3><p>Dos personas abren la misma app a la misma hora y ven cosas distintas.</p></div>
+      </div>
+      <div class="pane grid g3" data-p="orden">
+        <div class="card"><span class="icon">🥇</span><h3>Lo primero gana</h3><p>Lo que aparece primero es lo que más se elige. El primer lugar nunca es casualidad.</p></div>
+        <div class="card"><span class="icon">✨</span><h3>«Recomendado para ti»</h3><p>La fila de arriba decide qué miras antes de que busques.</p></div>
+        <div class="card"><span class="icon">🔍</span><h3>El buscador también ordena</h3><p>Dos personas buscan «pañales» y no ven las mismas marcas arriba.</p></div>
+      </div>
+      <div class="pane grid g3" data-p="oferta">
+        <div class="card"><span class="icon">🎟️</span><h3>Tu cupón</h3><p>El descuento que te llega cambia según tu historial de compras.</p></div>
+        <div class="card"><span class="icon">🧺</span><h3>«Comprados juntos»</h3><p>Te ofrecen lo que suele ir con lo que ya pusiste en el carrito.</p></div>
+        <div class="card"><span class="icon">🔔</span><h3>El carrito abandonado</h3><p>Si dejas algo a medias, te llega un recordatorio, a veces con descuento.</p></div>
+      </div>
+      <div class="pane grid g3" data-p="precio">
+        <div class="card"><span class="icon">🚕</span><h3>Precio por demanda</h3><p>La misma ruta en taxi por aplicativo cuesta más a la hora punta o cuando llueve.</p></div>
+        <div class="card"><span class="icon">✈️</span><h3>Precio que se mueve</h3><p>El pasaje cambia según la fecha, la demanda y cuánto falta para el vuelo.</p></div>
+        <div class="card"><span class="icon">👤</span><h3>Precio por persona</h3><p>Algunas tiendas prueban precios distintos según quién compra. Los reguladores ya lo vigilan.</p></div>
+      </div>
+    </div>
+    <div class="grid g2 mt24 r">
+      <div class="video" data-id="4xbgHCd2PeA" data-start="0" data-lang="ES" data-title="Desenmascarando a Netflix" data-ch="Cómo funcionan sus recomendaciones · YouTube"></div>
+      <div class="video" data-id="AFtPQoWpSbc" data-start="0" data-lang="ES" data-title="Cuando la IA decide qué pagas" data-ch="Precios dinámicos según el cliente · YouTube"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · SESGOS -->
+<section class="slide light" data-title="Los sesgos que ya conoces" data-min="2" data-notes="<ul><li>Conecta con la primera mitad del curso. Son los mismos sesgos que estudiaron.</li><li>Lo nuevo no son los sesgos. Lo nuevo es que el algoritmo prueba cuál te funciona a ti y te muestra más de ese.</li><li>Pregunta. ¿Cuál de estos les funciona a ustedes?</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">10 · Viejos conocidos</div>
+    <h2 class="r">Los sesgos que ya conoces, <span class="grad">ahora a tu medida.</span></h2>
+    <div class="grid g4 mt24 r">
+      <div class="card bc"><span class="chip blue">Prueba social</span><div class="scr">Lo más visto en Perú hoy</div><p>Si muchos lo ven, asumes que vale la pena.</p></div>
+      <div class="card bc"><span class="chip warn">Escasez</span><div class="scr">Quedan 2 unidades</div><p>Lo que se acaba parece más valioso.</p></div>
+      <div class="card bc"><span class="chip pink">Opción por defecto</span><div class="scr">El siguiente episodio empieza en 5 segundos</div><p>Si no haces nada, sigues.</p></div>
+      <div class="card bc"><span class="chip ok">Anclaje</span><div class="scr"><s>S/ 199</s>&nbsp; S/ 119</div><p>El primer precio que ves hace que el segundo parezca barato.</p></div>
+    </div>
+    <div class="card mt24 r" style="border-left:4px solid var(--blue)"><p style="font-size:19px;color:var(--fg)">Lo nuevo no son los sesgos. Lo nuevo es que el algoritmo <b>prueba cuál te funciona a ti</b> y te muestra más de ese.</p></div>
+  </div>
+</section>
+
+<!-- 14 · LA BURBUJA -->
+<section class="slide" data-title="La burbuja" data-min="2" data-notes="<ul><li>Recorre el embudo de arriba hacia abajo. De diez mil productos terminas eligiendo entre diez.</li><li>Frase clave. Elegiste tú, pero entre lo que te dejaron ver.</li><li>Eli Pariser popularizó el término burbuja de filtro en 2011. Clip en español de unos cinco minutos, o su charla TED con subtítulos.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">11 · La burbuja</div>
+    <h2 class="r">Elegiste tú, pero <span class="grad">entre lo que te dejaron ver.</span></h2>
+    <div class="split mt16">
+      <div class="fun r">
+        <div class="fl"><b>10 000</b><span>productos hay en la tienda</span></div>
+        <div class="fl"><b>50</b><span>cree el algoritmo que te pueden gustar</span></div>
+        <div class="fl"><b>10</b><span>entran en tu pantalla</span></div>
+        <div class="fl"><b>1</b><span>terminas comprando</span></div>
+        <p class="small mt16">A esto se le llama <b style="color:var(--fg)">burbuja de filtro</b>. El término lo popularizó Eli Pariser en 2011. Cada persona ve una versión distinta de internet, armada con lo que ya le gustó antes.</p>
+      </div>
+      <div class="grid g2 r">
+        <div class="video" data-id="QuJIPrxFopI" data-start="0" data-lang="ES" data-title="El filtro burbuja, explicado" data-ch="Explicación en español · YouTube"></div>
+        <div class="video" data-id="B8ofWFx525s" data-start="0" data-lang="EN" data-title="Cuidado con las burbujas de filtro en línea" data-ch="Eli Pariser · TED · 2011"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 · TARGET -->
+<section class="slide light" data-title="Cuando la predicción incomoda" data-min="2" data-notes="<ul><li>Cuenta la historia en tres pasos. Es un caso reportado por Charles Duhigg en The New York Times en 2012. Algunos detalles se discuten, pero la técnica es real.</li><li>Por qué les importa. La llegada de un bebé cambia los hábitos de compra. Quien llega primero a esa familia se puede quedar con sus compras por años, pañales incluidos. Conecta con hábitos (6.4.2).</li><li>Pregunta. ¿Acertar basta? ¿Cómo se sentiría la persona si supiera lo que sabes de ella?</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">12 · Un caso famoso</div>
+    <h2 class="r">Cuando la predicción <span class="grad">incomoda.</span></h2>
+    <div class="split mt16" style="align-items:start">
+      <div class="r">
+        <div class="grid" style="gap:10px">
+          <div class="card step"><b>1</b><p>Target, una cadena de Estados Unidos, analizó compras como crema sin perfume y suplementos vitamínicos.</p></div>
+          <div class="card step"><b>2</b><p>Con esas compras calculó qué clientas probablemente estaban embarazadas, y hasta de cuántos meses.</p></div>
+          <div class="card step"><b>3</b><p>Envió cupones de bebé. Según el reportaje, llegaron a casa de una adolescente antes de que su papá lo supiera.</p></div>
+        </div>
+        <p class="tiny mt16">Caso contado por Charles Duhigg en The New York Times (2012). Algunos detalles se discuten, pero la técnica es real.</p>
+      </div>
+      <div class="r">
+        <div class="card" style="border-left:4px solid var(--orange)"><h3>¿Por qué tanto interés?</h3><p style="font-size:16.5px">La llegada de un bebé cambia los hábitos de compra. Quien llega primero a esa familia se puede quedar con sus compras por años, <b>pañales incluidos</b>.</p></div>
+        <div class="video mt16" data-id="7KKg1jFdbgw" data-start="0" data-lang="ES" data-title="Target sabía que estaba embarazada antes que su familia" data-ch="El caso contado en video · YouTube"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 · AYUDA O MANIPULACIÓN -->
+<section class="slide" data-title="¿Te ayuda o te manipula?" data-min="2" data-notes="<ul><li>Conecta con la sesión de ética y sostenibilidad. La pregunta es la misma, ahora con algoritmos.</li><li>Lee las dos columnas. La línea la cruza quien diseña el sistema, no el sistema.</li><li>Prueba rápida, el principio de publicidad que retoman Thaler y Sunstein en Nudge. ¿Lo harías igual si la persona viera exactamente lo que estás haciendo?</li><li>Clip sobre patrones oscuros como apoyo.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">13 · Con criterio</div>
+    <h2 class="r">¿Te ayuda <span class="grad">o te manipula?</span></h2>
+    <div class="grid g2 mt24 r">
+      <div class="card am ok"><h3>Te ayuda cuando</h3><ul><li>Te ahorra tiempo de verdad</li><li>Te recuerda algo que sí necesitas</li><li>Puedes ver por qué te lo muestra y apagarlo</li></ul></div>
+      <div class="card am no"><h3>Te manipula cuando</h3><ul><li>Aprovecha un momento en que estás vulnerable</li><li>Inventa una urgencia que no existe</li><li>Esconde el precio final o la forma de salir</li></ul></div>
+    </div>
+    <div class="split mt24 r" style="align-items:start">
+      <div class="card"><span class="chip warn">🧪 Prueba rápida</span><p class="mt8" style="color:var(--fg);font-size:20px;line-height:1.4">¿Lo harías igual si la persona viera exactamente lo que estás haciendo?</p><p class="small mt8">Es el principio de publicidad que retoman Thaler y Sunstein en Nudge. Úsalo en tu proyecto. Si no podrías contárselo al consumidor, no lo hagas.</p></div>
+      <div class="video" data-id="A5KVZaFdqGE" data-start="0" data-lang="ES" data-title="Los patrones oscuros de internet" data-ch="Dark patterns explicados · YouTube"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 · BB SOFT -->
+<section class="slide" data-title="¿Y BB Soft?" data-min="2" data-notes="<ul><li>Aterriza en el proyecto. BB Soft vende en bodegas, sin datos de quién compra. MOE SAC son dos personas.</li><li>Pero el canal tradicional ya tiene su propio algoritmo, el bodeguero. Recuerda, recomienda y decide qué paquete queda a la mano.</li><li>Deja la pregunta para su diagnóstico. ¿Qué sabe el bodeguero de esa mamá que ninguna IA sabe todavía?</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">14 · En la bodega</div>
+    <h2 class="r">¿Y BB Soft, <span class="grad">en la bodega?</span></h2>
+    <div class="grid g2 mt24 r">
+      <div class="card"><span class="chip pink">Lo que no puede</span><h3 class="mt16">Personalizar como Netflix o Amazon</h3><p>No sabe quién compra en cada bodega ni qué llevó la semana pasada. Y MOE SAC son dos personas, sin equipo de datos.</p></div>
+      <div class="card"><span class="chip ok">Lo que ya existe</span><h3 class="mt16">El bodeguero, el algoritmo del barrio</h3><p>Recuerda qué llevas, te recomienda cuando no hay tu marca y decide qué paquete queda a la mano.</p></div>
+    </div>
+    <div class="card mt24 r" style="text-align:center;padding:30px"><span class="chip warn">💬 Para tu diagnóstico</span><p class="mt16" style="color:var(--fg);font-size:clamp(22px,2.6vw,32px);font-weight:700;letter-spacing:-.02em;line-height:1.25">¿Qué sabe el bodeguero de esa mamá <span class="grad">que ninguna IA sabe todavía?</span></p></div>
+  </div>
+</section>
+
+<!-- 18 · QUIZ -->
+<section class="slide" data-title="Quiz rápido" data-min="2" data-notes="<ul><li>Lee cada pregunta en voz alta y da unos segundos antes de revelar.</li><li>Seis preguntas, unos 30 segundos cada una. Este tema entra en el examen final.</li></ul>">
+  <div class="wrap" style="max-width:860px">
+    <div class="eyebrow r">¿Quedó claro?</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap" class="r">
+      <h2 style="margin:0">Quiz rápido.</h2>
+      <div style="display:flex;align-items:center;gap:14px"><div class="qdots" id="qdots"></div><b id="qscore" class="muted">0 / 6</b></div>
+    </div>
+    <div id="quiz" class="mt24 r"></div>
+    <div style="display:flex;gap:8px" class="mt24 r"><button class="btn ghost" id="qprev">← Anterior</button><button class="btn" id="qnext">Siguiente →</button></div>
+  </div>
+</section>
+
+<!-- 19 · CIERRE -->
+<section class="slide cover" data-title="Cierre" data-min="1" data-notes="<ul><li>Tres ideas para llevarse.</li><li>Pide que vuelvan a su respuesta del inicio. ¿Lo buscaron o les apareció? ¿Ahora saben por qué?</li><li>Recuerda que el tema entra en el examen final.</li></ul>">
+  <div class="orb o1"></div><div class="orb o2"></div>
+  <div class="wrap">
+    <div class="eyebrow r">Para llevarte</div>
+    <h1 class="r" style="font-size:clamp(40px,6.6vw,88px)">La IA ya predice.<br>El <span class="hl">criterio</span> lo pones tú.</h1>
+    <div class="split mt32" style="align-items:start">
+      <div class="r">
+        <div class="grid" style="gap:10px">
+          <div class="card"><h3>1 · Predice con tu pasado</h3><p>La IA adivina lo que harás con lo que ya hiciste.</p></div>
+          <div class="card"><h3>2 · Personalizar es elegir qué no ves</h3><p>Lo que no aparece en tu pantalla también es una decisión.</p></div>
+          <div class="card"><h3>3 · La línea la pone una persona</h3><p>Entre ayudar y manipular decide quien diseña, no el algoritmo.</p></div>
+        </div>
+        <div class="signoff"><svg class="ik" role="img" aria-label="Logo IK"><use href="#ik"/></svg><div><b>Ivo Kalinowski</b><em>Tecnología con criterio humano.</em></div></div>
+      </div>
+      <div class="r">
+        <div class="card"><span class="chip">↩️ Vuelve al inicio</span><p class="mt8" style="color:var(--fg);font-size:20px;line-height:1.4">Lo último que compraste o viste, ¿lo buscaste tú o te apareció? Ahora ya sabes por qué te apareció a ti.</p></div>
+        <div class="card mt16"><span class="chip warn">📝 Examen final</span><p class="mt8">Este tema entra en el examen final del 27 de noviembre, junto con el resto del curso.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 · FUENTES -->
+<section class="slide light" data-title="Fuentes" data-min="0" data-notes="<ul><li>Diapositiva de respaldo. Compártela si te piden las referencias.</li></ul>">
+  <div class="wrap">
+    <div class="eyebrow r">Referencias</div>
+    <h2 class="r">Fuentes.</h2>
+    <p class="small r">Consultadas el 11 de noviembre de 2026. Los videos pertenecen a sus canales y se citan en cada clip.</p>
+    <div class="grid g3 mt24 r small" id="sources"></div>
+  </div>
+</section>
+
+</main>
+
+
+<nav id="bar" aria-label="Controles">
+  <button id="bPrev" title="Anterior (←)"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <span class="ttl" id="bTitle"></span><span class="ctr" id="bCtr"></span>
+  <button id="bNext" title="Siguiente (→)"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+  <button id="bGrid" title="Índice (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+  <button id="bNotes" title="Notas del presentador (N)"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4z"/></svg></button>
+  <button id="bFull" title="Pantalla completa (F)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <span class="tm" id="bTimer" title="Cronómetro (T): clic para iniciar o pausar, doble clic para reiniciar">00:00</span>
+</nav>
+<div id="overview"><h2>Índice</h2><div class="og" id="og"></div></div>
+<div id="notes"></div>
+<div id="toast"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const slides = $$('.slide');
+let cur = 0;
+
+/* ---------- datos ---------- */
+const START = [
+  ['Lo busqué yo','Bien. Igual pregúntate quién decidió qué opciones viste primero cuando buscaste. Lo vemos en la parada 09.'],
+  ['Me apareció','Como a la mayoría. Al final de la clase vas a entender por qué te apareció a ti y no a otra persona.'],
+  ['No me acuerdo','Es normal. Las decisiones rápidas casi no dejan recuerdo. Es el Sistema 1 que vimos al inicio del curso.']
+];
+const FLIPS = [
+  ['🔎','Buscaba palabras exactas','Si no escribías el nombre del producto, no lo encontraba.','Entiende lo que necesitas','Le escribes «pañales para piel sensible, menos de 40 soles» y te arma opciones comparadas.'],
+  ['📷','No entendía una foto','Para buscar algo tenías que saber cómo se llamaba.','Reconoce productos en una foto','Fotografías unas zapatillas y te dice qué modelo son y dónde las venden.'],
+  ['🧺','Recomendaba lo que compraron otros','«Clientes que compraron esto también compraron.»','Te arma la compra','Un asistente propone el carrito completo según tu historial y lo que le pides.'],
+  ['💳','No podía comprar','Siempre tenías que entrar a la tienda y pagar tú.','Compra por ti','Desde setiembre de 2025 se puede pagar dentro de ChatGPT. Empezó en Estados Unidos.'],
+  ['👗','No te podías probar nada','Comprabas ropa en línea a ciegas.','Te prueba la ropa','Subes una foto tuya y ves cómo te queda la prenda antes de comprarla.'],
+  ['🤖','Atención con respuestas fijas','Menús de opciones y «marque 1».','Atención que conversa','Entiende tu reclamo, busca tu pedido y te ofrece una solución.'],
+  ['🖼️','Una portada para todos','La misma imagen de la película para cualquier persona.','Una portada para ti','Netflix elige la imagen de cada título según lo que sueles ver.'],
+  ['⭐','Reseñas escritas por personas','Leías una por una para decidir.','Reseñas resumidas, y también falsas','La IA resume cientos de reseñas en un párrafo. Y también puede fabricar reseñas falsas.']
+];
+const TL = [
+  ['Años 90','📦','Amazon recomienda','Nace la idea de «clientes que compraron esto también compraron». Te recomiendan según lo que hicieron personas parecidas a ti.','var(--orange)'],
+  ['2006','🏆','El premio Netflix','Netflix ofrece un millón de dólares a quien mejore 10% sus recomendaciones. Lo gana un equipo en 2009.','var(--pink)'],
+  ['2012','🤰','Target predice embarazos','Una cadena de Estados Unidos calcula qué clientas están embarazadas con lo que compran. Lo vemos en la parada 12.','var(--pink)'],
+  ['2016','📱','El feed «Para ti»','Nace Douyin en China y luego TikTok. Ya no ves lo que publican tus amigos, ves lo que el algoritmo cree que te va a enganchar.','var(--teal)'],
+  ['2017','🖼️','Portadas a tu medida','Netflix muestra una imagen distinta del mismo título según lo que sueles ver.','var(--pink)'],
+  ['Nov 2022','💬','La IA empieza a conversar','Llega ChatGPT. Le escribes con tus palabras y te responde como una persona.','var(--blue)'],
+  ['2023','⭐','Reseñas resumidas por IA','Amazon empieza a resumir cientos de reseñas en un párrafo para ayudarte a decidir.','var(--orange)'],
+  ['2024','🛍️','Asistentes de compra','Amazon lanza Rufus, un asistente al que le preguntas qué comprar.','var(--orange)'],
+  ['Set 2025','💳','Compra dentro del chat','ChatGPT permite pagar sin salir de la conversación. Empezó en Estados Unidos con tiendas de Etsy.','var(--blue)'],
+  ['2026','🤖','Agentes que compran','Las grandes plataformas preparan agentes que buscan, comparan y pagan por ti. La pregunta ya no es solo qué ves. Es quién decide.','var(--purple)']
+];
+const CATS = [
+  ['Fútbol','#2997ff',['Los goles de la fecha','Entrenamiento en casa','Las mejores atajadas','Así juega la sub 20']],
+  ['Recetas','#ff9f0a',['Lomo saltado en 15 minutos','Postres sin horno','Ceviche paso a paso','Desayunos baratos']],
+  ['Bebés','#30d158',['Cómo cambiar un pañal','Rutina para que duerma','Qué llevar a la clínica','Papillas caseras']],
+  ['Videojuegos','#a78bfa',['Truco para pasar el nivel','Los juegos del año','Reacción a la partida','Armando mi PC']],
+  ['Maquillaje','#ff6b9a',['Look en 5 minutos','Reseña de una base','Skincare de noche','Labiales baratos']],
+  ['Viajes','#64d2ff',['Cusco con poco dinero','Playas del norte','Qué llevar a la selva','Arequipa en un día']]
+];
+const QUIZ = [
+  ['¿Qué hace, en el fondo, la IA que te recomienda productos?',['Lee tu mente','Predice lo que harás con lo que ya hiciste','Elige al azar'],1,'Aprende patrones de tu conducta pasada y de personas parecidas a ti.'],
+  ['Para el algoritmo, ¿qué pesa más?',['Lo que dices que te gusta','Lo que haces en la pantalla','Tu edad y tu distrito'],1,'Cuánto miras, qué tocas, qué compras. La conducta pesa más que la opinión, igual que en tu trabajo de campo.'],
+  ['¿Qué es una burbuja de filtro?',['Un error de la aplicación','Ver solo lo que se parece a lo que ya te gustó','Un tipo de anuncio pagado'],1,'Cada persona ve una versión distinta de internet. El término lo popularizó Eli Pariser en 2011.'],
+  ['«El siguiente episodio empieza en 5 segundos» usa sobre todo…',['La opción por defecto','El anclaje','La prueba social'],0,'Si no haces nada, sigues. Es el mismo default que vimos en arquitectura de elección.'],
+  ['¿Qué cambia cuando un agente compra por ti?',['Nada, todo sigue igual','La marca también tiene que convencer al asistente','Desaparecen los precios'],1,'El asistente mira datos, reseñas, stock y precio. El empaque bonito le importa poco.'],
+  ['¿Qué sabe el bodeguero que una IA todavía no?',['Nada, el algoritmo ya sabe todo','Lo que pasa en el mostrador y lo que dice la mamá cuando no hay su marca','Solo el precio'],1,'Eso es justo lo que tu trabajo de campo puede ver y un algoritmo no.']
+];
+const SOURCES = [
+  ['Gomez-Uribe y Hunt (2016). The Netflix recommender system. ACM TMIS','https://dl.acm.org/doi/10.1145/2843948'],
+  ['Netflix Technology Blog (2017). Artwork personalization at Netflix','https://netflixtechblog.com/artwork-personalization-c589f074ad76'],
+  ['Linden, Smith y York (2003). Amazon.com recommendations. IEEE Internet Computing','https://ieeexplore.ieee.org/document/1167344'],
+  ['Netflix Prize (2006 a 2009)','https://en.wikipedia.org/wiki/Netflix_Prize'],
+  ['TikTok (2020). How TikTok recommends videos #ForYou','https://newsroom.tiktok.com/en-us/how-tiktok-recommends-videos-for-you'],
+  ['OpenAI (29 set 2025). Buy it in ChatGPT. Instant Checkout','https://openai.com/index/buy-it-in-chatgpt/'],
+  ['Duhigg, C. (2012). How companies learn your secrets. The New York Times Magazine','https://www.nytimes.com/2012/02/19/magazine/shopping-habits.html'],
+  ['Pariser, E. (2011). Beware online filter bubbles. TED','https://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles'],
+  ['Thaler, R. y Sunstein, C. (2021). Nudge. The final edition. Penguin','https://en.wikipedia.org/wiki/Nudge_(book)'],
+  ['Amazon News. Rufus y resúmenes de reseñas con IA','https://www.aboutamazon.com/news'],
+  ['Videos, canales citados en cada clip en YouTube','https://www.youtube.com/']
+];
+
+/* ---------- construir ---------- */
+const AG = [['En simple',3],['Antes y ahora',4],['La historia en una línea',5],['Lo que todavía no hace',6],['Agentes que compran',7],['Tus huellas',8],['El ciclo',9],['Pruébalo',10],['Qué te personalizan',11],['Sesgos a tu medida',12],['La burbuja',13],['Un caso famoso',14],['¿Ayuda o manipulación?',15],['En la bodega',16]];
+$('#agenda').innerHTML = AG.map((a,i)=>`<button data-go="${a[1]}"><span class="n">${String(i+1).padStart(2,'0')}</span><span class="t">${a[0]}</span><span class="m">${slides[a[1]].dataset.min} min</span></button>`).join('');
+$$('#agenda [data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+
+// pregunta de arranque
+let startPick=null;
+function drawStart(){ $('#start').innerHTML=START.map((o,i)=>`<button data-i="${i}" class="${startPick===i?'right':''}">${o[0]}</button>`).join('');
+  $('#startWhy').textContent = startPick===null?'':START[startPick][1];
+  $$('#start button').forEach(b=>b.onclick=()=>{ startPick=+b.dataset.i; drawStart(); }); }
+drawStart();
+
+// tarjetas que voltean
+$('#flips').innerHTML = FLIPS.map(f=>`<div class="flip" tabindex="0" role="button" aria-label="Voltear: ${f[1]}"><div class="in">
+  <div class="face front"><span class="icon">${f[0]}</span><span class="tag">Antes</span><h3>${f[1]}</h3><p>${f[2]}</p><span class="hint">Toca para ver hoy ↻</span></div>
+  <div class="face back"><span class="tag">Hoy</span><h3>${f[3]}</h3><p>${f[4]}</p><span class="hint">Toca para volver ↻</span></div></div></div>`).join('');
+$$('.flip').forEach(c=>{c.onclick=()=>c.classList.toggle('on');c.onkeydown=e=>{if(e.key==='Enter'){c.classList.toggle('on');e.stopPropagation()}}});
+
+// línea de tiempo
+$('#tl').innerHTML = TL.map((t,i)=>`<button class="ev" data-i="${i}" style="--c:${t[4]}"><span class="d">${t[0]}</span><span class="dot"></span><span class="l">${t[2]}</span></button>`).join('');
+function tlSel(i){ $$('#tl .ev').forEach(e=>e.classList.toggle('sel',+e.dataset.i===i)); const t=TL[i];
+  $('#tld').innerHTML=`<div class="big">${t[1]}</div><div><div class="tiny" style="font-weight:700;color:${t[4]}">${t[0]}</div><h3>${t[2]}</h3><p class="muted">${t[3]}</p></div>`; }
+$$('#tl .ev').forEach(e=>e.onclick=()=>tlSel(+e.dataset.i)); tlSel(0);
+
+// pestañas
+$$('#tabs button').forEach(b=>b.onclick=()=>{ $$('#tabs button').forEach(x=>x.classList.toggle('on',x===b)); $$('.pane').forEach(p=>p.classList.toggle('on',p.dataset.p===b.dataset.p)); });
+
+// simulador de feed
+let W, toques;
+const probs=()=>{ const p=W.map(w=>Math.pow(w,1.6)); const s=p.reduce((a,b)=>a+b,0); return p.map(x=>x/s); };
+const pick=p=>{ let r=Math.random(),a=0; for(let i=0;i<p.length;i++){a+=p[i]; if(r<a) return i;} return p.length-1; };
+function drawSim(first){
+  const p=probs(); const order = first ? [0,1,2,3,4,5,Math.floor(Math.random()*6),Math.floor(Math.random()*6)] : Array.from({length:8},()=>pick(p));
+  $('#feed').innerHTML = order.map(ci=>{ const c=CATS[ci], t=c[2][Math.floor(Math.random()*c[2].length)];
+    return `<button class="post${first?'':' nuevo'}" data-c="${ci}"><div class="ph" style="background:${c[1]}">${c[0]}</div><div class="tx">${t}</div><div class="lk">Toca si te gusta ♥</div></button>`; }).join('');
+  $$('#feed .post').forEach(b=>b.onclick=()=>{ W[+b.dataset.c]+=3; toques++; drawSim(false); });
+  $('#bars').innerHTML = CATS.map((c,i)=>`<div class="brow"><span>${c[0]}</span><span class="t"><i style="width:${Math.round(p[i]*100)}%;background:${c[1]}"></i></span><span class="p">${Math.round(p[i]*100)}%</span></div>`).join('');
+  const mx=Math.max(...p), mi=p.indexOf(mx);
+  $('#msg').innerHTML = toques===0 ? 'Todavía no sabe nada de ti. Por eso te muestra un poco de todo.'
+    : mx>0.6 ? `Con <b>${toques} toques</b>, tu feed ya es <b>${Math.round(mx*100)}% ${CATS[mi][0].toLowerCase()}</b>. Así empieza una burbuja.`
+    : `Llevas <b>${toques} ${toques===1?'toque':'toques'}</b>. El algoritmo ya está aprendiendo qué te gusta.`;
+}
+function resetSim(){ W=CATS.map(()=>1); toques=0; drawSim(true); }
+$('#reset').onclick=resetSim; resetSim();
+
+// quiz
+let qi=0; const ans=QUIZ.map(()=>null);
+$('#qdots').innerHTML=QUIZ.map(()=>'<i></i>').join('');
+function drawQ(){ const q=QUIZ[qi]; const a=ans[qi];
+  $('#quiz').innerHTML=`<div class="q on"><div class="tiny">Pregunta ${qi+1} de ${QUIZ.length}</div><h3 class="mt8" style="font-size:clamp(22px,2.6vw,32px);letter-spacing:-.02em">${q[0]}</h3>
+  <div class="opts">${q[1].map((o,i)=>`<button data-i="${i}" class="${a===null?'':(i===q[2]?'right':(i===a?'wrong':''))}">${o}</button>`).join('')}</div>
+  <p class="why">${a===null?'':(a===q[2]?'✅ ¡Correcto! ':'❌ No exactamente. ')+q[3]}</p></div>`;
+  $$('#quiz .opts button').forEach(b=>b.onclick=()=>{ if(ans[qi]!==null) return; ans[qi]=+b.dataset.i; drawQ(); });
+  $$('#qdots i').forEach((d,i)=>d.classList.toggle('on',i<=qi));
+  $('#qscore').textContent=ans.filter((x,i)=>x===QUIZ[i][2]).length+' / '+QUIZ.length;
+  $('#qnext').textContent = qi===QUIZ.length-1?'Reiniciar ↺':'Siguiente →'; }
+$('#qnext').onclick=()=>{ if(qi===QUIZ.length-1){ ans.fill(null); qi=0; } else qi++; drawQ(); };
+$('#qprev').onclick=()=>{ if(qi>0){qi--;drawQ();} }; drawQ();
+
+// fuentes
+$('#sources').innerHTML=SOURCES.map(s=>`<a class="card" style="padding:14px 16px;display:block;color:inherit" href="${s[1]}" target="_blank" rel="noopener">${s[0]} <span style="color:var(--blue)">↗</span></a>`).join('');
+
+/* ---------- videos ---------- */
+const isFile = location.protocol==='file:';
+const fmt=s=>{s=Math.max(0,s|0);const h=s/3600|0,m=(s%3600)/60|0,ss=s%60;return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(ss).padStart(2,'0')};
+$$('.video').forEach(v=>{ const {id,lang,title,ch}=v.dataset; const start=+(v.dataset.start||0); const end=v.dataset.end?+v.dataset.end:null;
+  const yt=`https://www.youtube.com/watch?v=${id}&t=${start}s`;
+  const dur=end?end-start:0;
+  const range = end ? `▶ ${fmt(start)} → ${fmt(end)} · ${dur>=60?Math.floor(dur/60)+' min ':''}${dur%60?dur%60+' s':''}` : (start?`▶ Desde ${fmt(start)}`:'▶ Video completo');
+  v.innerHTML=`<div class="screen" style="background-image:url(https://i.ytimg.com/vi/${id}/hqdefault.jpg)" role="button" tabindex="0" aria-label="Reproducir clip: ${title}">
+    <span class="lang">${lang}</span><span class="play"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
+    <span class="range">${range}</span></div>
+    <div class="cap"><b>${title}</b><span>${ch}</span><a href="${yt}" target="_blank" rel="noopener">Abrir en YouTube${start?' desde '+fmt(start):''} ↗</a></div>`;
+  const sc=$('.screen',v);
+  const play=()=>{ if(isFile){ window.open(yt,'_blank','noopener'); toast('Abierto en YouTube. Para ver los clips dentro de la presentación, ábrela con "Abrir presentacion.bat".'); return; }
+    $$('.video iframe').forEach(f=>{ const s=f.parentElement; f.remove(); s.classList.remove('playing'); });
+    const o={start, autoplay:1, rel:0, modestbranding:1, playsinline:1, cc_load_policy: lang==='EN'?1:0, cc_lang_pref:'es', hl:'es'}; if(end) o.end=end;
+    const p=new URLSearchParams(o);
+    const f=document.createElement('iframe'); f.src=`https://www.youtube-nocookie.com/embed/${id}?${p}`; f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin'; f.title=title;
+    sc.appendChild(f); sc.classList.add('playing'); };
+  sc.onclick=play; sc.onkeydown=e=>{if(e.key==='Enter'){play();e.stopPropagation()}};
+});
+function stopVideos(){ $$('.video iframe').forEach(f=>{ f.parentElement.classList.remove('playing'); f.remove(); }); }
+
+/* ---------- navegación ---------- */
+$('#og').innerHTML=slides.map((s,i)=>`<button data-i="${i}"><span class="on2">${String(i+1).padStart(2,'0')} · ${s.dataset.min||0} min</span><b>${s.dataset.title}</b></button>`).join('');
+$$('#og button').forEach(b=>b.onclick=()=>{go(+b.dataset.i);toggleOv(false);});
+function go(n){ n=Math.max(0,Math.min(slides.length-1,n)); if(n!==cur) stopVideos();
+  slides.forEach((s,i)=>{ s.classList.toggle('active',i===n); s.classList.toggle('prev',i<n); });
+  document.body.classList.toggle('on-light',slides[n].classList.contains('light'));
+  cur=n; slides[n].scrollTop=0;
+  $('#bTitle').textContent=slides[n].dataset.title; $('#bCtr').textContent=(n+1)+' / '+slides.length;
+  $('#progress').style.width=((n)/(slides.length-1)*100)+'%';
+  $('#notes').innerHTML=`<h4>Notas · ${slides[n].dataset.title} · ~${slides[n].dataset.min||0} min</h4>${slides[n].dataset.notes||''}`;
+  $$('#og button').forEach(b=>b.classList.toggle('cur',+b.dataset.i===n));
+  try{ history.replaceState(null,'','#'+(n+1)); }catch(e){}
+}
+const next=()=>go(cur+1), prev=()=>go(cur-1);
+function toggleOv(v){ $('#overview').classList.toggle('on',v===undefined?!$('#overview').classList.contains('on'):v); }
+// Notas: visibles en local o con ?notas en la dirección; en línea quedan ocultas para los estudiantes.
+const allowNotes = location.protocol==='file:' || ['localhost','127.0.0.1'].includes(location.hostname) || new URLSearchParams(location.search).has('notas');
+if(!allowNotes){ $('#bNotes').remove(); $$('.notes-only').forEach(e=>e.remove()); }
+function toggleNotes(){ if(allowNotes) $('#notes').classList.toggle('on'); }
+function full(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); }
+$('#bNext').onclick=next; $('#bPrev').onclick=prev; $('#bGrid').onclick=()=>toggleOv(); if(allowNotes) $('#bNotes').onclick=toggleNotes; $('#bFull').onclick=full;
+
+// cronómetro
+let t0=0, acc=0, run=false, iv=null;
+function tick(){ const s=Math.floor((acc+(run?Date.now()-t0:0))/1000); $('#bTimer').textContent=String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function toggleTimer(){ if(run){acc+=Date.now()-t0;run=false;clearInterval(iv);} else {t0=Date.now();run=true;iv=setInterval(tick,500);} $('#bTimer').classList.toggle('run',run); tick(); }
+$('#bTimer').onclick=toggleTimer; $('#bTimer').ondblclick=()=>{acc=0;t0=Date.now();tick();};
+
+document.addEventListener('keydown',e=>{
+  if(e.target.closest && e.target.closest('input,select,textarea')) return;
+  const k=e.key;
+  if(['ArrowRight','PageDown',' '].includes(k)){e.preventDefault();next();}
+  else if(['ArrowLeft','PageUp'].includes(k)){e.preventDefault();prev();}
+  else if(k==='Home') go(0); else if(k==='End') go(slides.length-1);
+  else if(k==='o'||k==='O'||k==='Escape'&&$('#overview').classList.contains('on')) toggleOv();
+  else if(k==='n'||k==='N') toggleNotes();
+  else if(k==='f'||k==='F') full();
+  else if(k==='t'||k==='T') toggleTimer();
+  else if(k==='h'||k==='H') document.body.classList.toggle('hide-ui');
+});
+// deslizar en celular
+let sx=null, sy=null;
+document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+document.addEventListener('touchend',e=>{ if(sx===null) return; const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+  if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5&&!e.target.closest('.tl,input')) (dx<0?next:prev)(); sx=null; },{passive:true});
+
+let tt; function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('on'),4200); }
+const h=parseInt(location.hash.slice(1)); go(isNaN(h)?0:h-1);
+if(isFile) setTimeout(()=>toast('Consejo: abre "Abrir presentacion.bat" para que los clips se reproduzcan dentro de la presentación.'),1200);
+})();
+</script>
+</body>
+</html>
